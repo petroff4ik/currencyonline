@@ -9,46 +9,73 @@ package currency.online;
  * @author petroff
  */
 import org.xmlpull.v1.XmlPullParser;
-import android.util.Log;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.StringReader;
+import android.util.Log;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.text.ParseException;
 
 public class XmlParser {
 
-	public void parserXml(String xml) {
-
+	public static List<Currency> parserXml(String xml) {
+		List<Currency> list = new ArrayList<Currency>();
 		try {
 			XmlPullParser parser = prepareXpp(xml);
-			Integer i = 0;
+			String date = new java.util.Date().toString();
+			String currentTag = "";
+			Currency currency = new Currency();
 			while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-				Log.v("test",parser.getName());
-				if (parser.getEventType() == XmlPullParser.START_TAG
-						&& parser.getName().equals("Valute")) {
-					parser.getAttributeValue(0);
-				} else if (parser.getEventType() == XmlPullParser.START_TAG
-						&& parser.getName().equals("link")) {
-					parser.getAttributeValue(0);
+				if (parser.getEventType() == XmlPullParser.START_TAG && !parser.getName().equals("ValCurs")) {
+					currentTag = parser.getName();
+				} else if (parser.getEventType() == XmlPullParser.TEXT) {
+
+					if (currentTag.equals("CharCode")) {
+						currency.setCharCode(parser.getText());
+					} else if (currentTag.equals("Name")) {
+						currency.setName(parser.getText());
+					} else if (currentTag.equals("Value")) {
+						NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+						double d = 0;
+						try {
+							Number number = format.parse(parser.getText());
+							d = number.doubleValue();
+						} catch (ParseException p) {
+						}
+						currency.setValue(d);
+					}
+					currentTag = "";
+				} else if (parser.getEventType() == XmlPullParser.START_TAG && !parser.getName().equals("ValCurs")) {
+					date = parser.getAttributeValue(0);
+				} else if (parser.getEventType() == XmlPullParser.END_TAG && parser.getName().equals("Valute")) {
+					currency.setDate(date);
+					list.add(currency);
+					currency = new Currency();
 				}
-
-
 
 				parser.next();
 			}
-		} catch (Throwable t) {
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
+		return list;
 
 	}
 
-	private XmlPullParser prepareXpp(String xml) throws XmlPullParserException {
-		// получаем фабрику
+	private static XmlPullParser prepareXpp(String xml) throws XmlPullParserException {
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-		// включаем поддержку namespace (по умолчанию выключена)
 		factory.setNamespaceAware(true);
-		// создаем парсер
 		XmlPullParser xpp = factory.newPullParser();
-		// даем парсеру на вход Reader
 		xpp.setInput(new StringReader(xml));
 		return xpp;
 	}
+	
+	
 }

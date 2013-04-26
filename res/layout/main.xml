@@ -4,10 +4,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-	<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello World, CurrencyActivity"
-    />
+	<TextView
+	android:id="@+id/dateCurrency"
+    android:text="Here will be date"
+	style="@style/StyleDate"
+	/>
+    
+	<ListView
+ android:id="@+id/lvCurrency"
+ style="@style/StyleLvCur"
+	/>
+	
 </LinearLayout>
 
