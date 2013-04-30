@@ -18,9 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Date;
 import java.text.ParseException;
 
 public class XmlParser {
+	
+	static String currentDt = new java.util.Date().toString ();
 
 	public static List<Currency> parserXml(String xml) {
 		List<Currency> list = new ArrayList<Currency>();
@@ -55,6 +58,8 @@ public class XmlParser {
 					currency.setDate(date);
 					list.add(currency);
 					currency = new Currency();
+				}else if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("ValCurs")) {
+					currentDt = parser.getAttributeValue(0);
 				}
 
 				parser.next();
@@ -67,6 +72,10 @@ public class XmlParser {
 
 		return list;
 
+	}
+	
+	public static String getCDT(){
+		return currentDt;
 	}
 
 	private static XmlPullParser prepareXpp(String xml) throws XmlPullParserException {

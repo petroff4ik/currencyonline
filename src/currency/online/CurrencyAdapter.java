@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import junit.framework.Assert;
+import android.util.Log;
 
 /**
  *
@@ -59,16 +60,22 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 		holder.text.setText(list.get(position).getCharCode());
 		holder.desc.setText(list.get(position).getName());
 		holder.value.setText(list.get(position).getValue().toString());
-		holder.imageview.setImageDrawable(R.drawable.);
+		String charlow = list.get(position).getCharCode().toLowerCase();
+		Integer i = getDrawable(charlow);
+
+		if (i > 0) {
+			holder.imageview.setImageResource(i);
+		} else {
+			holder.imageview.setImageResource(R.drawable.none);
+		}
 		return view;
 	}
-	
-	 public  int getDrawable( String name)
-    {
-        Assert.assertNotNull(context);
-        Assert.assertNotNull(name);
 
-        return context.getResources().getIdentifier(name,
-                "drawable", context.getPackageName());
-    }
+	public int getDrawable(String name) {
+		Assert.assertNotNull(context);
+		Assert.assertNotNull(name);
+
+		return context.getResources().getIdentifier(name,
+				"drawable", context.getPackageName());
+	}
 }
