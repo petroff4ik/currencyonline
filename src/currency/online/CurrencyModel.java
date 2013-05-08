@@ -8,6 +8,7 @@ import android.widget.ListView;
 import java.util.List;
 import android.app.Activity;
 import android.widget.TextView;
+import android.util.Log;
 
 /**
  *
@@ -19,13 +20,14 @@ public class CurrencyModel {
 	List<Currency> currency;
 	Activity activity;
 	ListView lvMain;
-	String CurrentDate;
+	String CurrentDate = "Connect...";
 
 	public CurrencyModel(Activity activity) {
 		this.activity = activity;
 	}
 
-	public Boolean preperadate() {
+	public Boolean threadPreDate() {
+		
 		FileOperation fo = new FileOperation(activity);
 		if (!Http.hasConnection(activity)) {
 			String data = fo.readFile();
@@ -44,12 +46,8 @@ public class CurrencyModel {
 	}
 
 	public void preloadData() {
-		if (preperadate()) {
-			setUpLV();
-			setCurrentDate();
-		} else {
-			//TODO haven't data
-		}
+		TaskPreperDate t = new TaskPreperDate(this);
+		t.execute();
 	}
 
 	private void setCurrentDate() {
@@ -59,13 +57,19 @@ public class CurrencyModel {
 
 	private void setUpLV() {
 		lvMain = (ListView) activity.findViewById(R.id.lvCurrency);
-		CurrencyAdapter adapter = new CurrencyAdapter(activity, this.currency);
-		lvMain.setAdapter(adapter);
+		if (currency != null) {
+			CurrencyAdapter adapter = new CurrencyAdapter(activity, this.currency);
+			lvMain.setAdapter(adapter);
+		}
+	}
+
+	public void setupData() {
+		setUpLV();
+		setCurrentDate();
 	}
 
 	public void reload(Activity activity) {
 		this.activity = activity;
-		setUpLV();
-		setCurrentDate();
+		setupData();
 	}
 }

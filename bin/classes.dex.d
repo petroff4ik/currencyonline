@@ -3,6 +3,7 @@
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/FileOperation.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/BuildConfig.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyService.class \
+/home/petroff/android_project/currencyonline/bin/classes/currency/online/CProgressBar.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyAdapter$ViewHolder.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$layout.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$attr.class \
@@ -14,6 +15,7 @@
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Currency.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Http.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyActivity.class \
+/home/petroff/android_project/currencyonline/bin/classes/currency/online/TaskPreperDate.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$string.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$id.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyService$1.class \
