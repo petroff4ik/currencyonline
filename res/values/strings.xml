@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CurrencyActivity</string>
+    <string name="app_name">Cbr currency</string>
+    <string name="def_descr_img">img</string>
+    <string name="def_char_currency">RUB</string>
+    <string name="choose_c">Choose currency</string>
+    <string name="sum">Sum</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="res">Result</string>
 </resources>

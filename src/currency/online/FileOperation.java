@@ -26,13 +26,17 @@ import android.content.Context;
 public class FileOperation {
 
 	final String LOG_TAG = "myLogs";
-	final String FILENAME = "data";
+	String FILENAME = "data";
 	final String DIR_SD = "currencyonline";
 	final String FILENAME_SD = "dataSD";
 	Context context;
 
 	FileOperation(Context context) {
 		this.context = context;
+	}
+	
+	void setFileName(String fileName){
+		this.FILENAME = fileName;
 	}
 
 	void writeFile(String data) {

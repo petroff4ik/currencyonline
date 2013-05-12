@@ -29,6 +29,7 @@ public final class CProgressBar {
 				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // устанавливаем стиль
 				mProgressDialog.setMessage("Load. Wait...");  // задаем текст
 				mProgressDialog.setMax(dMax);
+				mProgressDialog.setCancelable(false);
 				return mProgressDialog;
 
 			case IDD_WHEEL_PROGRESS:
@@ -36,6 +37,7 @@ public final class CProgressBar {
 						activity);
 				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				mProgressDialog.setMessage("Load. Wait...");
+				mProgressDialog.setCancelable(false);
 				return mProgressDialog;
 
 			default:
