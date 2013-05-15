@@ -77,7 +77,7 @@ public class CurrencyModel  {
 	private void setUpLV() {
 		lvMain = (ListView) activity.findViewById(R.id.lvCurrency);
 		if (currency != null) {
-			CurrencyAdapter adapter = new CurrencyAdapter(activity, this.currency, this.currency_old);
+			CurrencyAdapter adapter = new CurrencyAdapter(activity, this.currency, this.currency_old, 0);
 			lvMain.setAdapter(adapter);
 		}
 	}
