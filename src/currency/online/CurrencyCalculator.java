@@ -12,7 +12,7 @@ public class CurrencyCalculator extends Activity {
 		setContentView(R.layout.calc);
 		MyParcelable myObj = (MyParcelable) getIntent().getParcelableExtra(
 				MyParcelable.class.getCanonicalName());
-		Log.v("test"," " + myObj);
+		Log.v("test"," " + myObj.currency);
 	}
 	//setResult(RESULT_OK, intent);
     //finish();

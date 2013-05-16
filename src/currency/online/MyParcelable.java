@@ -1,6 +1,6 @@
 package currency.online;
 
-
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -17,7 +17,7 @@ public class MyParcelable implements Parcelable {
 
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeString(currentCurency);
-		//out.writeList(currency);
+		out.writeList(currency);
 	}
 
 	public static final Parcelable.Creator<MyParcelable> CREATOR = new Parcelable.Creator<MyParcelable>() {
@@ -31,8 +31,9 @@ public class MyParcelable implements Parcelable {
 	};
 
 	private MyParcelable(Parcel in) {
+		currentCurency = in.readString();
+		currency = new ArrayList<Currency>();
 		in.readList(currency, null);
-		currentCurency = in.readString();	
 	}
 
 	MyParcelable(List<Currency> currency, String currentCurency) {
