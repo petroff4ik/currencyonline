@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MyParcelable implements Parcelable {
 	private String currentCurency;
-	List<Currency> currency;
+	List<Currency> currency = new ArrayList<Currency>();
 
 	public int describeContents() {
 		return 0;
@@ -17,7 +17,7 @@ public class MyParcelable implements Parcelable {
 
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeString(currentCurency);
-		out.writeList(currency);
+		out.writeTypedList(currency);
 	}
 
 	public static final Parcelable.Creator<MyParcelable> CREATOR = new Parcelable.Creator<MyParcelable>() {
@@ -32,8 +32,7 @@ public class MyParcelable implements Parcelable {
 
 	private MyParcelable(Parcel in) {
 		currentCurency = in.readString();
-		currency = new ArrayList<Currency>();
-		in.readList(currency, null);
+		in.readTypedList(currency, Currency.CREATOR);
 	}
 
 	MyParcelable(List<Currency> currency, String currentCurency) {

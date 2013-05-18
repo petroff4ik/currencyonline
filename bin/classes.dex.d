@@ -4,6 +4,7 @@
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/FileOperation.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/MyParcelable$1.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Currency.class \
+/home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyAdapter$ViewHolderS.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyAdapter$ViewHolder.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Currency$1.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Http.class \

@@ -12,12 +12,14 @@ import android.util.Log;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import android.widget.Spinner;
+import android.widget.EditText;
 
 /**
  *
  * @author petroff
  */
-public class CurrencyModel  {
+public class CurrencyModel {
 
 	String url = "http://www.cbr.ru/scripts/XML_daily.asp?";
 	//http://www.cbr.ru/scripts/XML_daily.asp?date_req=02/03/2002
@@ -28,13 +30,17 @@ public class CurrencyModel  {
 	String CurrentDate = "";
 	TaskPreperDate t;
 	String defaultCurrency = "RUR";
+	static Spinner spinner;
+	static Spinner spinner2;
+	static Spinner spinner3;
+	static EditText edit;
 
 	public CurrencyModel(Activity activity) {
 		this.activity = activity;
 	}
 
 	public Boolean threadPreDate() {
-		
+
 		FileOperation fo = new FileOperation(activity);
 		if (!Http.hasConnection(activity)) {
 			String data = fo.readFile();
@@ -60,7 +66,7 @@ public class CurrencyModel  {
 			fo.setFileName("data_old");
 			fo.writeFile(data);
 		}
-		
+
 		return true;
 	}
 
@@ -77,7 +83,7 @@ public class CurrencyModel  {
 	private void setUpLV() {
 		lvMain = (ListView) activity.findViewById(R.id.lvCurrency);
 		if (currency != null) {
-			CurrencyAdapter adapter = new CurrencyAdapter(activity, this.currency, this.currency_old, 0);
+			CurrencyAdapter adapter = new CurrencyAdapter(activity, this.currency, this.currency_old);
 			lvMain.setAdapter(adapter);
 		}
 	}
@@ -88,30 +94,61 @@ public class CurrencyModel  {
 	}
 
 	public void reload(Activity activity) {
-		if(t != null){
+		if (t != null) {
 			String statusT = t.getStatus().toString();
-			if(statusT.equals("RUNNING")){
-				CProgressBar.onCreateDialog(1,activity);
+			if (statusT.equals("RUNNING")) {
+				CProgressBar.onCreateDialog(1, activity);
 				CProgressBar.setProgress();
 			}
-			
+
 		}
 		this.activity = activity;
 		setupData();
 	}
+
+	public String getPrevData(String dt) {
+		Date dt2 = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		try {
+			dt2 = sdf.parse(dt);
+		} catch (Exception e) {
+			//TODO can't parse string
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(dt2);
+		c.add(Calendar.DATE, -1);
+		sdf.applyPattern("dd/MM/yyyy");
+		return sdf.format(c.getTime());
+	}
 	
-	public String getPrevData(String dt){
-		  Date dt2 = new Date();
-		  SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		  try {
-		   dt2 = sdf.parse(dt);
-		  }catch(Exception e) {
-			  //TODO can't parse string
-		  } 
-	      Calendar c=Calendar.getInstance();
-	      c.setTime(dt2);
-	      c.add(Calendar.DATE,-1);
-	      sdf.applyPattern("dd/MM/yyyy");
-	      return sdf.format(c.getTime());
+	public static Spinner getSpinner(){
+		return spinner;
+	}
+
+	public static void setAdapterForSpiner(Activity a, List<Currency> l) {
+
+		spinner = (Spinner) a.findViewById(R.id.spinner1);
+		spinner2 = (Spinner) a.findViewById(R.id.spinner2);
+		spinner3 = (Spinner) a.findViewById(R.id.spinner3);
+		edit = (EditText) a.findViewById(R.id.editText1);
+		if (l != null) {
+			CurrencyAdapter adapter = new CurrencyAdapter(a, l);
+			spinner.setAdapter(adapter);
+			spinner.setSelection(listFindByArray(l, "SEK"));
+			spinner2.setAdapter(adapter);
+			spinner3.setAdapter(adapter);
+			
+		}
+	}
+
+	public static int listFindByArray(List<Currency> l, String search) {
+		int i = 0;
+		for (Currency ob : l) {
+			if (ob.getCharCode() != null && ob.getCharCode().contains(search)) {
+				i = l.indexOf(ob);
+			}
+			//something here
+		}
+		return i;
 	}
 }

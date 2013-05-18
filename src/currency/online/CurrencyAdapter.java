@@ -16,6 +16,7 @@ import android.widget.TextView;
 import junit.framework.Assert;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 
 import android.util.Log;
 
@@ -31,12 +32,20 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 	private int type;
 
 	public CurrencyAdapter(Activity context, List<Currency> list,
-			List<Currency> list_old, int type) {
+			List<Currency> list_old) {
 		super(context, R.layout.currencylist, list);
 		this.context = context;
 		this.list = list;
 		this.list_old = list_old;
-		this.type = type;
+		this.type = 0;
+	}
+
+	public CurrencyAdapter(Activity context, List<Currency> list) {
+		super(context, R.layout.currencylist, list);
+		this.context = context;
+		this.list = list;
+		this.list_old = new ArrayList<Currency>();
+		this.type = 1;
 	}
 
 	class Grafic {
@@ -78,6 +87,12 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 		protected ImageView imageview;
 		protected ImageView imageviewdiff;
 		protected TextView value_diff;
+	}
+
+	static class ViewHolderS {
+
+		protected TextView text;
+		protected ImageView imageview;
 	}
 
 	@Override
@@ -152,19 +167,30 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 	}
 
 	public View ViewForSpin(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = context.getLayoutInflater();
-		View row = inflater.inflate(R.layout.spinner, parent, false);
 
-		TextView label = (TextView) row.findViewById(R.id.textView1);
-		label.setText(list.get(position).getCharCode());
+		View view = null;
+		ViewHolderS holder;
+		if (convertView == null) {
+			LayoutInflater inflator = context.getLayoutInflater();
+			view = inflator.inflate(R.layout.spinner, parent, false);
+			holder = new ViewHolderS();
+			holder.text = (TextView) view.findViewById(R.id.textView1);
+			holder.imageview = (ImageView) view.findViewById(R.id.imageView1);
+			view.setTag(holder);
+		} else {
+			view = convertView;
+			holder = (ViewHolderS) view.getTag();
+		}
 
+		holder.text.setText(list.get(position).getCharCode());
 		String charlow = list.get(position).getCharCode().toLowerCase();
 		charlow = charlow.substring(0, (charlow.length() - 1));
 		Integer i = getDrawable(charlow);
-		ImageView icon = (ImageView) row.findViewById(R.id.imageView1);
-		icon.setImageResource(i);
+		holder.imageview.setImageResource(i);
 
-		return row;
+
+
+		return view;
 
 	}
 }

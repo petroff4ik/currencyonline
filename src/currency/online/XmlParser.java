@@ -50,6 +50,15 @@ public class XmlParser {
 						} catch (ParseException p) {
 						}
 						currency.setValue(d);
+					} else if(currentTag.equals("Nominal")){
+						NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+						int i = 0;
+						try {
+							Number number = format.parse(parser.getText());
+							i = number.intValue();
+						} catch (ParseException p) {
+						}
+						currency.setNominal(i);
 					}
 					currentTag = "";
 				} else if (parser.getEventType() == XmlPullParser.START_TAG && !parser.getName().equals("ValCurs")) {
