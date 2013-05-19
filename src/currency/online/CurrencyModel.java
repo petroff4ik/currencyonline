@@ -6,10 +6,14 @@ package currency.online;
 
 import android.widget.ListView;
 import java.util.List;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.widget.TextView;
 import android.util.Log;
 import java.util.Calendar;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.widget.Spinner;
@@ -34,9 +38,45 @@ public class CurrencyModel {
 	static Spinner spinner2;
 	static Spinner spinner3;
 	static EditText edit;
+	private static Double Spinner2_value;
+	private static int Spinner2_nominal;
+	private static Double Spinner3_value;
+	private static int Spinner3_nominal;
 
 	public CurrencyModel(Activity activity) {
 		this.activity = activity;
+	}
+	
+	public static Double getSpinner2_value() {
+		return Spinner2_value;
+	}
+
+	public static void setSpinner2_value(Double spinner2_value) {
+		Spinner2_value = spinner2_value;
+	}
+
+	public static int getSpinner2_nominal() {
+		return Spinner2_nominal;
+	}
+
+	public static void setSpinner2_nominal(int spinner2_nominal) {
+		Spinner2_nominal = spinner2_nominal;
+	}
+
+	public static Double getSpinner3_value() {
+		return Spinner3_value;
+	}
+
+	public static void setSpinner3_value(Double spinner3_value) {
+		Spinner3_value = spinner3_value;
+	}
+
+	public static int getSpinner3_nominal() {
+		return Spinner3_nominal;
+	}
+
+	public static void setSpinner3_nominal(int spinner3_nominal) {
+		Spinner3_nominal = spinner3_nominal;
 	}
 
 	public Boolean threadPreDate() {
@@ -150,5 +190,20 @@ public class CurrencyModel {
 			//something here
 		}
 		return i;
+	}
+	
+	public static String currencyExchange(String str){
+		String result = "";
+		NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+		int cash = 0;
+		try {
+			Number number = format.parse(str);
+			cash = number.intValue();
+		} catch (ParseException p) {
+			result = "Error, only numeric";
+		}
+		Double t = cash / (Spinner2_value/Spinner3_value);
+		result = t.toString();
+		return result;
 	}
 }

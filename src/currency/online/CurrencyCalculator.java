@@ -6,12 +6,13 @@ import android.util.Log;
 import android.widget.AdapterView;
 import android.view.View;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.view.View.OnKeyListener;
 import android.view.KeyEvent;
 
-public class CurrencyCalculator extends Activity implements OnItemSelectedListener, OnKeyListener {
+public class CurrencyCalculator extends Activity implements
+		OnItemSelectedListener, OnKeyListener {
 
 	String selectCurrency;
 
@@ -27,36 +28,43 @@ public class CurrencyCalculator extends Activity implements OnItemSelectedListen
 		CurrencyModel.spinner3.setOnItemSelectedListener(this);
 		CurrencyModel.edit.setOnKeyListener(this);
 	}
-	//setResult(RESULT_OK, intent);
-	//finish();
 
-	@Override
+	// setResult(RESULT_OK, intent);
+	// finish();
+
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,
 			long id) {
-		Currency t = (Currency)parent.getItemAtPosition(pos);
-		if(parent.getId() == R.id.spinner1){
+		Currency t = (Currency) parent.getItemAtPosition(pos);
+		if (parent.getId() == R.id.spinner1) {
 			selectCurrency = t.getCharCode();
-		}else{
-			
+		} else if (parent.getId() == R.id.spinner2) {
+			CurrencyModel.setSpinner2_value(t.getValue());
+			CurrencyModel.setSpinner2_nominal(t.getNominal());
+		} else if (parent.getId() == R.id.spinner3) {
+			CurrencyModel.setSpinner3_value(t.getValue());
+			CurrencyModel.setSpinner3_nominal(t.getNominal());
+			calc();
 		}
-		
+
 	}
 
-	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
 	}
-	
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event)
-	{
-		String t = event.toString();;
-	    if(event.getAction() == KeyEvent.ACTION_DOWN && 
-		    (keyCode == KeyEvent.KEYCODE_ENTER))
-			{
-			    // сохраняем текст, введенный до нажатия Enter в переменн  
-				return true;
-			}
+
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& (keyCode == KeyEvent.KEYCODE_ENTER)) {
+			calc();
+			return true;
+		}
 		return false;
+	}
+
+	public void calc() {
+		String result = CurrencyModel.currencyExchange(CurrencyModel.edit
+				.getText().toString());
+		TextView text = (TextView) this.findViewById(R.id.res);
+		text.setText(result);
 	}
 }
