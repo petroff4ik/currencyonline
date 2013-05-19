@@ -202,7 +202,7 @@ public class CurrencyModel {
 		} catch (ParseException p) {
 			result = "Error, only numeric";
 		}
-		Double t = cash / (Spinner2_value/Spinner3_value);
+		Double t = cash * ((Spinner2_value / Spinner2_nominal) / (Spinner3_value / Spinner3_nominal));
 		result = t.toString();
 		return result;
 	}
