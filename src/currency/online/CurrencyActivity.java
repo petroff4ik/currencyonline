@@ -3,7 +3,6 @@ package currency.online;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 public class CurrencyActivity extends Activity {
@@ -19,7 +18,7 @@ public class CurrencyActivity extends Activity {
 		if (model == null) {
 			model = new CurrencyModel(this);
 			model.preloadData();
-		}else{
+		} else {
 			model.reload(this);
 		}
 
@@ -29,16 +28,20 @@ public class CurrencyActivity extends Activity {
 	public Object onRetainNonConfigurationInstance() {
 		return model;
 	}
-	
-	public void screenCalculate(View v){
-		MyParcelable mp = new MyParcelable(model.currency,model.defaultCurrency);
+
+	public void screenCalculate(View v) {
+		MyParcelable mp = new MyParcelable(model.currency, model.getCurrentCurrency());
 		Intent intent = new Intent(this, CurrencyCalculator.class);
 		intent.putExtra(MyParcelable.class.getCanonicalName(), mp);
-	    startActivityForResult(intent, 1);
-		Log.v("test","chook");
+		startActivityForResult(intent, 1);
 	}
-	
-	
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data == null) {
+			return;
+		}
+		model.parseDataFromIntentAndRecalc(data);
+		
+	}
 }
-
-

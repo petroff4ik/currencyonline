@@ -30,14 +30,16 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 	private final List<Currency> list_old;
 	private final Activity context;
 	private int type;
+	private CurrencyModel model;
 
 	public CurrencyAdapter(Activity context, List<Currency> list,
-			List<Currency> list_old) {
+			List<Currency> list_old, CurrencyModel model) {
 		super(context, R.layout.currencylist, list);
 		this.context = context;
 		this.list = list;
 		this.list_old = list_old;
 		this.type = 0;
+		this.model = model;
 	}
 
 	public CurrencyAdapter(Activity context, List<Currency> list) {
@@ -141,7 +143,8 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 
 		holder.text.setText(list.get(position).getCharCode());
 		holder.desc.setText(list.get(position).getName());
-		holder.value.setText(list.get(position).getValue().toString());
+		Double t = (model.getCurrentValue()/ model.getCurrentNominal()) / (list.get(position).getValue() / list.get(position).getNominal());
+		holder.value.setText(t.toString());
 		String charlow = list.get(position).getCharCode().toLowerCase();
 		charlow = charlow.substring(0, (charlow.length() - 1));
 		Integer i = getDrawable(charlow);
@@ -155,11 +158,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 	}
 
 	public int getDrawable(String name) {
-		Assert.assertNotNull(context);
-		Assert.assertNotNull(name);
-
-		return context.getResources().getIdentifier(name, "drawable",
-				context.getPackageName());
+		return Gd.getDrawable(name, context);
 	}
 
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
