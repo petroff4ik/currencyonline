@@ -10,6 +10,8 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.widget.TextView;
 import java.util.Calendar;
 import java.text.NumberFormat;
@@ -19,6 +21,7 @@ import java.util.Date;
 import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  *
@@ -35,6 +38,7 @@ public class CurrencyModel {
 	String CurrentDate = "";
 	TaskPreperDate t;
 	CurrencyAdapter adapter;
+	SharedPreferences sPref;
 	static Spinner spinner;
 	static Spinner spinner2;
 	static Spinner spinner3;
@@ -47,11 +51,14 @@ public class CurrencyModel {
 	private Double currentValue = 1.0;
 	private int currentNominal = 1;
 	private String currentDescr = "Russian rub";
+	final String CURRENT_CURRENCY = "current_currency";
+	final String CURRENT_NOMINAL = "current_nominal";
+	final String CURRENT_VALUE = "current_value";
 
 	public CurrencyModel(Activity activity) {
 		this.activity = activity;
 	}
-	
+
 	public static Double getSpinner2_value() {
 		return Spinner2_value;
 	}
@@ -83,8 +90,8 @@ public class CurrencyModel {
 	public static void setSpinner3_nominal(int spinner3_nominal) {
 		Spinner3_nominal = spinner3_nominal;
 	}
-	
-		/**
+
+	/**
 	 * @return the currentCurrency
 	 */
 	public String getCurrentCurrency() {
@@ -153,13 +160,25 @@ public class CurrencyModel {
 			fo.setFileName("data_old");
 			fo.writeFile(data);
 		}
-		Currency rub = new Currency(this.currentCurrency, this.currentDescr , this.currentValue, getPrevData(CurrentDate).toString(), this.currentNominal);
+		Currency rub = new Currency(this.currentCurrency, this.currentDescr, this.currentValue, getPrevData(CurrentDate).toString(), this.currentNominal);
 		currency.add(rub);
 		currency_old.add(rub);
 		return true;
 	}
 
+	public void restoreData() {
+		sPref = activity.getPreferences(activity.MODE_PRIVATE);
+		String ts = sPref.getString(this.CURRENT_CURRENCY, null);
+		if (ts != null) {
+			this.currentCurrency = sPref.getString(this.CURRENT_CURRENCY, "");
+			this.currentNominal = sPref.getInt(this.CURRENT_NOMINAL, currentNominal);
+			Float t = sPref.getFloat(this.CURRENT_VALUE, 1);
+			this.currentValue = t.doubleValue();
+		}
+	}
+
 	public void preloadData() {
+		restoreData();
 		t = new TaskPreperDate(this);
 		t.execute();
 	}
@@ -184,6 +203,7 @@ public class CurrencyModel {
 	}
 
 	public void reload(Activity activity) {
+		restoreData();
 		if (t != null) {
 			String statusT = t.getStatus().toString();
 			if (statusT.equals("RUNNING")) {
@@ -210,8 +230,8 @@ public class CurrencyModel {
 		sdf.applyPattern("dd/MM/yyyy");
 		return sdf.format(c.getTime());
 	}
-	
-	public static Spinner getSpinner(){
+
+	public static Spinner getSpinner() {
 		return spinner;
 	}
 
@@ -227,7 +247,7 @@ public class CurrencyModel {
 			spinner.setSelection(listFindByArray(l, currentCurrency));
 			spinner2.setAdapter(adapter);
 			spinner3.setAdapter(adapter);
-			
+
 		}
 	}
 
@@ -241,8 +261,8 @@ public class CurrencyModel {
 		}
 		return i;
 	}
-	
-	public static String currencyExchange(String str){
+
+	public static String currencyExchange(String str) {
 		String result = "";
 		NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 		int cash = 0;
@@ -256,20 +276,26 @@ public class CurrencyModel {
 		result = t.toString();
 		return result;
 	}
-	
-	public void setCurrentCurrency(){
+
+	public void setCurrentCurrency() {
 		int p = Gd.getDrawable(Gd.preName(this.currentCurrency), activity);
-		ImageView image = (ImageView)activity.findViewById(R.id.icon_root);
+		ImageView image = (ImageView) activity.findViewById(R.id.icon_root);
 		image.setImageResource(p);
-		TextView text = (TextView)activity.findViewById(R.id.value_root);
+		TextView text = (TextView) activity.findViewById(R.id.value_root);
 		text.setText(this.currentCurrency);
 	}
-	
-	public void parseDataFromIntentAndRecalc(Intent data){
+
+	public void parseDataFromIntentAndRecalc(Intent data) {
 		this.currentCurrency = data.getStringExtra("selectCurrency");
 		this.currentNominal = data.getIntExtra("nominal", 1);
 		this.currentValue = data.getDoubleExtra("value", 1.0);
 		setCurrentCurrency();
-		adapter.notifyDataSetChanged();	
+		adapter.notifyDataSetChanged();
+		sPref = activity.getPreferences(activity.MODE_PRIVATE);
+		Editor ed = sPref.edit();
+		ed.putString(CURRENT_CURRENCY, currentCurrency);
+		ed.putInt(CURRENT_NOMINAL, currentNominal);
+		ed.putFloat(CURRENT_VALUE, currentValue.floatValue());
+		ed.commit();
 	}
 }

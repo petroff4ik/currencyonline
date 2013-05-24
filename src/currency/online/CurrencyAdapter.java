@@ -143,7 +143,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 
 		holder.text.setText(list.get(position).getCharCode());
 		holder.desc.setText(list.get(position).getName());
-		Double t = (model.getCurrentValue()/ model.getCurrentNominal()) / (list.get(position).getValue() / list.get(position).getNominal());
+		Double t = ((list.get(position).getValue() / model.getCurrentValue() ) * model.getCurrentNominal());
 		holder.value.setText(t.toString());
 		String charlow = list.get(position).getCharCode().toLowerCase();
 		charlow = charlow.substring(0, (charlow.length() - 1));
