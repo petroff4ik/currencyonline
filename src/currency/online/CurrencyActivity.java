@@ -3,7 +3,10 @@ package currency.online;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.MenuItem.OnMenuItemClickListener;
 
 public class CurrencyActivity extends Activity {
 
@@ -44,4 +47,19 @@ public class CurrencyActivity extends Activity {
 		model.parseDataFromIntentAndRecalc(data);
 		
 	}
+	
+	 public boolean onCreateOptionsMenu(Menu menu) {
+	      // TODO Auto-generated method stub
+		 MenuItem menuItem = menu.add(R.string.reload);
+			menuItem.setIcon(R.drawable.reload);
+			menuItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+				public boolean onMenuItemClick(MenuItem _menuItem) {
+					model.preloadData();
+					return true;
+				}
+			});
+	      
+	      return super.onCreateOptionsMenu(menu);
+	    }
 }

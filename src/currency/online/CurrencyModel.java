@@ -14,6 +14,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.widget.TextView;
 import java.util.Calendar;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -160,9 +162,11 @@ public class CurrencyModel {
 			fo.setFileName("data_old");
 			fo.writeFile(data);
 		}
-		Currency rub = new Currency(this.currentCurrency, this.currentDescr, this.currentValue, getPrevData(CurrentDate).toString(), this.currentNominal);
+		if(listFindByArray(this.currency, "RUB") == 0){
+		Currency rub = new Currency("RUB", "Russian rub", 1.0, getPrevData(CurrentDate).toString(), 1);
 		currency.add(rub);
 		currency_old.add(rub);
+		}
 		return true;
 	}
 
@@ -273,6 +277,7 @@ public class CurrencyModel {
 			result = "Error, only numeric";
 		}
 		Double t = cash * ((Spinner2_value / Spinner2_nominal) / (Spinner3_value / Spinner3_nominal));
+		t = new BigDecimal(t).setScale(3, RoundingMode.UP).doubleValue();
 		result = t.toString();
 		return result;
 	}

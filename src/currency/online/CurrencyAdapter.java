@@ -131,10 +131,11 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 			view = convertView;
 			holder = (ViewHolder) view.getTag();
 		}
-
+		
+		Double t = ((list.get(position).getValue() / model.getCurrentValue() ) * model.getCurrentNominal());
+		Double t1 = ((list_old.get(position).getValue() / model.getCurrentValue() ) * model.getCurrentNominal());
 		if (list.get(position).getCharCode().equals(list_old.get(position).getCharCode())) {
-			Grafic gf = new Grafic(list.get(position).getCharCode(), list.get(
-					position).getValue(), list_old.get(position).getValue());
+			Grafic gf = new Grafic(list.get(position).getCharCode(), t, t1);
 			holder.imageviewdiff.setImageResource(gf.getImgResourse());
 			holder.value_diff.setText(gf.getValueDiff());
 		} else {
@@ -143,7 +144,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 
 		holder.text.setText(list.get(position).getCharCode());
 		holder.desc.setText(list.get(position).getName());
-		Double t = ((list.get(position).getValue() / model.getCurrentValue() ) * model.getCurrentNominal());
+		t = new BigDecimal(t).setScale(3, RoundingMode.UP).doubleValue();
 		holder.value.setText(t.toString());
 		String charlow = list.get(position).getCharCode().toLowerCase();
 		charlow = charlow.substring(0, (charlow.length() - 1));

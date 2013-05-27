@@ -8,4 +8,8 @@
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="res">Result</string>
+    <string name="update">Update</string>
+    <string name="alaram">Alaram</string>
+    <string name="def">0</string>
+    <string name="reload">Reload</string>
 </resources>
