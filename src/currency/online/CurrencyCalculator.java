@@ -28,6 +28,7 @@ public class CurrencyCalculator extends Activity implements
 		CurrencyModel.spinner2.setOnItemSelectedListener(this);
 		CurrencyModel.spinner3.setOnItemSelectedListener(this);
 		CurrencyModel.edit.setOnKeyListener(this);
+		CurrencyModel.preperDateForCalculatorActivity(this);
 	}
 
 	@Override

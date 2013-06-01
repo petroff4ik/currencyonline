@@ -23,7 +23,8 @@ import java.util.Date;
 import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -44,6 +45,8 @@ public class CurrencyModel {
 	static Spinner spinner;
 	static Spinner spinner2;
 	static Spinner spinner3;
+	static Spinner spinner4;
+	static EditText editText2;
 	static EditText edit;
 	private static Double Spinner2_value;
 	private static int Spinner2_nominal;
@@ -56,9 +59,33 @@ public class CurrencyModel {
 	final String CURRENT_CURRENCY = "current_currency";
 	final String CURRENT_NOMINAL = "current_nominal";
 	final String CURRENT_VALUE = "current_value";
+	static final List<SpinnerUpdateAdapterElement> UPL = new ArrayList<SpinnerUpdateAdapterElement>();
+
+	static {
+		UPL.add(new SpinnerUpdateAdapterElement(10, "10 min"));
+		UPL.add(new SpinnerUpdateAdapterElement(20, "20 min"));
+		UPL.add(new SpinnerUpdateAdapterElement(30, "30 min"));
+		UPL.add(new SpinnerUpdateAdapterElement(60, "1 hour"));
+	}
 
 	public CurrencyModel(Activity activity) {
 		this.activity = activity;
+	}
+
+	public static EditText getEditText2() {
+		return editText2;
+	}
+
+	public static void setEditText2(EditText editText2) {
+		CurrencyModel.editText2 = editText2;
+	}
+
+	public static Spinner getSpinner4() {
+		return spinner4;
+	}
+
+	public static void setSpinner4(Spinner spinner4) {
+		CurrencyModel.spinner4 = spinner4;
 	}
 
 	public static Double getSpinner2_value() {
@@ -162,10 +189,10 @@ public class CurrencyModel {
 			fo.setFileName("data_old");
 			fo.writeFile(data);
 		}
-		if(listFindByArray(this.currency, "RUB") == 0){
-		Currency rub = new Currency("RUB", "Russian rub", 1.0, getPrevData(CurrentDate).toString(), 1);
-		currency.add(rub);
-		currency_old.add(rub);
+		if (listFindByArray(this.currency, "RUB") == 0) {
+			Currency rub = new Currency("RUB", "Russian rub", 1.0, getPrevData(CurrentDate).toString(), 1);
+			currency.add(rub);
+			currency_old.add(rub);
 		}
 		return true;
 	}
@@ -302,5 +329,15 @@ public class CurrencyModel {
 		ed.putInt(CURRENT_NOMINAL, currentNominal);
 		ed.putFloat(CURRENT_VALUE, currentValue.floatValue());
 		ed.commit();
+	}
+
+	public static void preperDateForCalculatorActivity(Activity a) {
+		spinner4 = (Spinner) a.findViewById(R.id.spinner4);
+		editText2 = (EditText) a.findViewById(R.id.editText2);
+		SpinnerUpdateAdapter adapter = new SpinnerUpdateAdapter(a,
+				android.R.layout.simple_spinner_item, UPL);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner4.setAdapter(adapter);
+
 	}
 }
