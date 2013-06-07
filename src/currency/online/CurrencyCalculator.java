@@ -16,6 +16,7 @@ public class CurrencyCalculator extends Activity implements
 	private String selectCurrency;
 	private Double value;
 	private int nominal;
+	private int updatePeriod;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,8 @@ public class CurrencyCalculator extends Activity implements
 		intent.putExtra("selectCurrency", selectCurrency);
 		intent.putExtra("value", value);
 		intent.putExtra("nominal", nominal);
+		intent.putExtra("updatePeriod", updatePeriod);
+		intent.putExtra("alaram", CurrencyModel.editText2.getText());
 		setResult(RESULT_OK, intent);
 		finish();
 
@@ -56,6 +59,9 @@ public class CurrencyCalculator extends Activity implements
 			CurrencyModel.setSpinner3_value(t.getValue());
 			CurrencyModel.setSpinner3_nominal(t.getNominal());
 			calc();
+		}else if(parent.getId() == R.id.spinner4){
+			SpinnerUpdateAdapterElement t1 = (SpinnerUpdateAdapterElement) parent.getItemAtPosition(pos);
+			updatePeriod = t1.getValue();
 		}
 
 	}

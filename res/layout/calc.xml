@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -106,7 +107,8 @@
             android:layout_height="wrap_content"
             android:text="@string/res"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
+
         <TextView
             android:id="@+id/res"
             android:layout_width="wrap_content"
@@ -127,7 +129,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
+
+
+
+
+
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
@@ -135,7 +142,8 @@
             android:layout_weight="0.42"
             android:text="@string/update"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
+
         <Spinner
             android:id="@+id/spinner4"
             android:layout_width="wrap_content"
@@ -154,7 +162,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
+
+
+
+
+
+
+
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
@@ -162,12 +177,14 @@
             android:layout_marginRight="90dp"
             android:text="@string/alaram"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
+
         <EditText
             android:id="@+id/editText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+			android:inputType="number"
             android:ems="10"
             android:text="@string/def" />
 

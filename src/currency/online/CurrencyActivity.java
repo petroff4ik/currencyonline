@@ -8,9 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
 
-public class CurrencyActivity extends Activity {
+public class CurrencyActivity extends Activity{
 
 	CurrencyModel model;
+	Activity a = this;
+	final int REQUEST_CODE_CALC = 1;
+	final int REQUEST_CODE_SERVICE = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,30 +39,42 @@ public class CurrencyActivity extends Activity {
 		MyParcelable mp = new MyParcelable(model.currency, model.getCurrentCurrency());
 		Intent intent = new Intent(this, CurrencyCalculator.class);
 		intent.putExtra(MyParcelable.class.getCanonicalName(), mp);
-		startActivityForResult(intent, 1);
+		startActivityForResult(intent, REQUEST_CODE_CALC);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (data == null) {
-			return;
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+				case REQUEST_CODE_CALC:
+					if (data == null) {
+						return;
+					}
+					model.parseDataFromIntentAndRecalc(data);
+					break;
+
+				case REQUEST_CODE_SERVICE:
+
+					break;
+			}
 		}
-		model.parseDataFromIntentAndRecalc(data);
-		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem menuItem = menu.add(R.string.reload);
+		menuItem.setIcon(R.drawable.reload);
+		menuItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			public boolean onMenuItemClick(MenuItem _menuItem) {
+				model = new CurrencyModel(a);
+				model.preloadData();
+				return true;
+			}
+		});
+
+		return super.onCreateOptionsMenu(menu);
 	}
 	
-	 public boolean onCreateOptionsMenu(Menu menu) {
-	      // TODO Auto-generated method stub
-		 MenuItem menuItem = menu.add(R.string.reload);
-			menuItem.setIcon(R.drawable.reload);
-			menuItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-				public boolean onMenuItemClick(MenuItem _menuItem) {
-					model.preloadData();
-					return true;
-				}
-			});
-	      
-	      return super.onCreateOptionsMenu(menu);
-	    }
 }

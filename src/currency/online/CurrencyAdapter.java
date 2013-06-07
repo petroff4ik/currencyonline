@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -87,6 +88,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 		protected ImageView imageview;
 		protected ImageView imageviewdiff;
 		protected TextView value_diff;
+		protected LinearLayout ll;
 	}
 
 	static class ViewHolderS {
@@ -124,6 +126,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 			holder.imageview = (ImageView) view.findViewById(R.id.icon);
 			holder.imageviewdiff = (ImageView) view.findViewById(R.id.icon_diff);
 			holder.value_diff = (TextView) view.findViewById(R.id.value_diff);
+			holder.ll = (LinearLayout)view.findViewById(R.id.ll);
 			view.setTag(holder);
 		} else {
 			view = convertView;
@@ -139,7 +142,6 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 		} else {
 			// check sort
 		}
-
 		holder.text.setText(list.get(position).getCharCode());
 		holder.desc.setText(list.get(position).getName());
 		t = new BigDecimal(t).setScale(3, RoundingMode.UP).doubleValue();
@@ -152,6 +154,12 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 			holder.imageview.setImageResource(i);
 		} else {
 			holder.imageview.setImageResource(R.drawable.none);
+		}
+		
+		if(model.getSelectCurrency() != null && model.getSelectCurrency().getCharCode().equals(list.get(position).getCharCode())){
+			holder.ll.setBackgroundResource(R.drawable.border);
+		}else{
+			holder.ll.setBackgroundDrawable(null);
 		}
 		return view;
 	}
