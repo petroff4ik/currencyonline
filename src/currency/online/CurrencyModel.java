@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.ImageView;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -197,6 +199,11 @@ public class CurrencyModel {
 
 	public Boolean threadPreDate() {
 
+		try {
+			TimeUnit.SECONDS.sleep(20);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		FileOperation fo = new FileOperation(activity);
 		if (!Http.hasConnection(activity)) {
 			String data = fo.readFile();
@@ -241,14 +248,14 @@ public class CurrencyModel {
 			this.currentValue = t.doubleValue();
 			this.updatePeriod = sPref.getInt(this.CURRENT_UPDATEPERIOD, 1420);
 			this.alaram = sPref.getInt(this.CURRENT_ALARAM, 0);
-			String tempCharCurrency =  sPref.getString(this.CURRENT_SELECT, "RUB");
+			String tempCharCurrency = sPref.getString(this.CURRENT_SELECT, "RUB");
+			Log.v("test", "CHOOSE " + tempCharCurrency);
 			int pos = listFindByArray(currency, tempCharCurrency);
 			selectCurrency = currency.get(pos);
 		}
 	}
 
 	public void preloadData() {
-		restoreData();
 		t = new TaskPreperDate(this);
 		t.execute();
 	}
@@ -271,29 +278,34 @@ public class CurrencyModel {
 					Currency t = (Currency) parent.getItemAtPosition(position);
 					setSelectCurrency(t);
 					adapter.notifyDataSetChanged();
+					sPref = activity.getPreferences(activity.MODE_PRIVATE);
+					Editor ed = sPref.edit();
+					ed.putString(CURRENT_SELECT, selectCurrency.getCharCode());
+					ed.commit();
 				}
 			});
 		}
 	}
 
 	public void setupData() {
+		restoreData();
 		setUpLV();
 		setCurrentDate();
 		setCurrentCurrency();
 	}
 
 	public void reload(Activity activity) {
-		restoreData();
+		this.activity = activity;
 		if (t != null) {
 			String statusT = t.getStatus().toString();
 			if (statusT.equals("RUNNING")) {
+				CProgressBar.finish();
 				CProgressBar.onCreateDialog(1, activity);
 				CProgressBar.setProgress();
 			}
-
+		} else {
+			setupData();
 		}
-		this.activity = activity;
-		setupData();
 	}
 
 	public String getPrevData(String dt) {
@@ -381,7 +393,6 @@ public class CurrencyModel {
 		ed.putFloat(CURRENT_VALUE, currentValue.floatValue());
 		ed.putInt(CURRENT_ALARAM, alaram);
 		ed.putInt(CURRENT_UPDATEPERIOD, updatePeriod);
-		ed.putString(CURRENT_SELECT, selectCurrency.getCharCode());
 		ed.commit();
 	}
 

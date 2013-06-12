@@ -70,9 +70,19 @@ public final class CProgressBar {
 		try {
 			mProgressDialog.setProgress(dMax);
 			mProgressDialog.cancel();
+			mProgressDialog.dismiss();
 		} catch (Exception e) {
 			Log.v("test", "t " + e);
 			/* cannot happen */
+		}
+	}
+
+	static public void finish() {
+		try {
+			if (mProgressDialog != null) {
+				mProgressDialog.dismiss();
+			}
+		} catch (Exception e) {
 		}
 	}
 }

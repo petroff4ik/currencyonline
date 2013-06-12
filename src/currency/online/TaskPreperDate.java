@@ -5,8 +5,6 @@
 package currency.online;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import java.util.concurrent.TimeUnit;
 
 /**
  *

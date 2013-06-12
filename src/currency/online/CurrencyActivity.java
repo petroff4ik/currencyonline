@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
 
-public class CurrencyActivity extends Activity{
+public class CurrencyActivity extends Activity {
 
 	CurrencyModel model;
 	Activity a = this;
@@ -40,6 +40,12 @@ public class CurrencyActivity extends Activity{
 		Intent intent = new Intent(this, CurrencyCalculator.class);
 		intent.putExtra(MyParcelable.class.getCanonicalName(), mp);
 		startActivityForResult(intent, REQUEST_CODE_CALC);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		CProgressBar.finish();
 	}
 
 	@Override
@@ -75,6 +81,4 @@ public class CurrencyActivity extends Activity{
 
 		return super.onCreateOptionsMenu(menu);
 	}
-	
-
 }
