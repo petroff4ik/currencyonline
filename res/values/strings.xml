@@ -12,4 +12,5 @@
     <string name="alaram">Alaram</string>
     <string name="def">0</string>
     <string name="reload">Reload</string>
+	<string name="warning">Can\'t connect</string>
 </resources>

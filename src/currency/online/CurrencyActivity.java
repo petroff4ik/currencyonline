@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.Window;
+import android.widget.AdapterView;
 
 public class CurrencyActivity extends Activity {
 
@@ -18,7 +20,9 @@ public class CurrencyActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		//startService(new Intent(this, CurrencyService.class));
 		model = (CurrencyModel) getLastNonConfigurationInstance();
 		if (model == null) {
@@ -28,6 +32,18 @@ public class CurrencyActivity extends Activity {
 			model.reload(this);
 		}
 
+
+	}
+
+	public void connectAdapterListner() {
+		model.lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
+					long id) {
+				model.onClickByItem((Currency) parent.getItemAtPosition(position));
+			}
+		});
 	}
 
 	@Override

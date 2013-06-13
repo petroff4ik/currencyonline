@@ -18,6 +18,15 @@ public class Currency implements Parcelable {
 	private Double value;
 	private String date;
 	private Integer nominal;
+	private String id;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public Currency() {
 	}
@@ -72,6 +81,7 @@ public class Currency implements Parcelable {
 		out.writeDouble(value);
 		out.writeString(date);
 		out.writeInt(nominal);
+		out.writeString(id);
 	}
 	
 	public static final Parcelable.Creator<Currency> CREATOR = new Parcelable.Creator<Currency>() {
@@ -91,13 +101,15 @@ public class Currency implements Parcelable {
 		value = in.readDouble();
 		date = in.readString();
 		nominal = in.readInt();
+		id = in.readString();
 	}
 
-	public Currency(String charCode, String name, Double value, String date, Integer nominal) {
+	public Currency(String charCode, String name, Double value, String date, Integer nominal, String id) {
 		this.charCode = charCode;
 		this.name = name;
 		this.value = value;
 		this.date = date;
 		this.nominal = nominal;
+		this.id = id;
 	}
 }

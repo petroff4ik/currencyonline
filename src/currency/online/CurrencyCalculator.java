@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.view.View.OnKeyListener;
 import android.view.KeyEvent;
 import android.content.Intent;
+import android.view.Window;
 
 public class CurrencyCalculator extends Activity implements
 		OnItemSelectedListener, OnKeyListener {
@@ -21,7 +22,9 @@ public class CurrencyCalculator extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.calc);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		MyParcelable myObj = (MyParcelable) getIntent().getParcelableExtra(
 				MyParcelable.class.getCanonicalName());
 		CurrencyModel.setAdapterForSpiner(this, myObj.currency, myObj.currentCurency);

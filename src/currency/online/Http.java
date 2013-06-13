@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
-import android.util.Log;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,7 +21,7 @@ import android.net.NetworkInfo;
  *
  * @author petroff
  */
-public class Http {
+public final class Http {
 
 	public static String connect(String url) {
 
@@ -36,7 +35,6 @@ public class Http {
 		try {
 			response = httpclient.execute(httpget);
 			// Examine the response status
-			Log.i("Praeda", response.getStatusLine().toString());
 
 			// Get hold of the response entity
 			HttpEntity entity = response.getEntity();
@@ -51,13 +49,14 @@ public class Http {
 				// now you have the string representation of the HTML request
 				instream.close();
 				return result;
+			} else {
+				return null;
 			}
 
 
 		} catch (Exception e) {
-			Log.i("Praeda", "error" + e);
+			return null;
 		}
-		return "";
 	}
 
 	private static String convertStreamToString(InputStream is) {

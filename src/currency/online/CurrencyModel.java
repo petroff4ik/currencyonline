@@ -27,7 +27,6 @@ import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.ImageView;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -59,13 +58,16 @@ public class CurrencyModel {
 	private Double currentValue = 1.0;
 	private int currentNominal = 1;
 	private String currentDescr = "Russian rub";
+	private String currentID = "R00000";
 	private Currency selectCurrency;
+	private Boolean parserFlag;
 	final String CURRENT_CURRENCY = "current_currency";
 	final String CURRENT_NOMINAL = "current_nominal";
 	final String CURRENT_VALUE = "current_value";
 	final String CURRENT_ALARAM = "current_alaram";
 	final String CURRENT_UPDATEPERIOD = "current_updateperiod";
 	final String CURRENT_SELECT = "currentSelect";
+	final String CURRENT_ID = "currentID";
 	static final List<SpinnerUpdateAdapterElement> UPL = new ArrayList<SpinnerUpdateAdapterElement>();
 	private int updatePeriod;
 	private int alaram;
@@ -199,15 +201,11 @@ public class CurrencyModel {
 
 	public Boolean threadPreDate() {
 
-		try {
-			TimeUnit.SECONDS.sleep(20);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		FileOperation fo = new FileOperation(activity);
 		if (!Http.hasConnection(activity)) {
 			String data = fo.readFile();
 			if (data == null || data.length() == 0) {
+				parserFlag = false;
 				return false;
 			} else {
 				currency = XmlParser.parserXml(data);
@@ -219,6 +217,10 @@ public class CurrencyModel {
 		} else {
 			//create current list
 			String data = Http.connect(url);
+			if (data == null) {
+				parserFlag = false;
+				return false;
+			}
 			currency = XmlParser.parserXml(data);
 			fo.writeFile(data);
 			CurrentDate = XmlParser.getCDT();
@@ -229,11 +231,12 @@ public class CurrencyModel {
 			fo.setFileName("data_old");
 			fo.writeFile(data);
 		}
-		Currency rub = new Currency("RUB", "Russian rub", 1.0, getPrevData(CurrentDate).toString(), 1);
+		Currency rub = new Currency(currentCurrency, currentDescr, currentValue, getPrevData(CurrentDate).toString(), currentNominal, currentID);
 		if (listFindByArray(this.currency, "RUB") == 0) {
 			currency.add(rub);
 			currency_old.add(rub);
 		}
+		parserFlag = true;
 		selectCurrency = rub;
 		return true;
 	}
@@ -248,8 +251,8 @@ public class CurrencyModel {
 			this.currentValue = t.doubleValue();
 			this.updatePeriod = sPref.getInt(this.CURRENT_UPDATEPERIOD, 1420);
 			this.alaram = sPref.getInt(this.CURRENT_ALARAM, 0);
+			this.currentID = sPref.getString(this.CURRENT_ID, "R00000");
 			String tempCharCurrency = sPref.getString(this.CURRENT_SELECT, "RUB");
-			Log.v("test", "CHOOSE " + tempCharCurrency);
 			int pos = listFindByArray(currency, tempCharCurrency);
 			selectCurrency = currency.get(pos);
 		}
@@ -270,28 +273,29 @@ public class CurrencyModel {
 		if (currency != null) {
 			adapter = new CurrencyAdapter(activity, this.currency, this.currency_old, this);
 			lvMain.setAdapter(adapter);
-			lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
-						long id) {
-					Currency t = (Currency) parent.getItemAtPosition(position);
-					setSelectCurrency(t);
-					adapter.notifyDataSetChanged();
-					sPref = activity.getPreferences(activity.MODE_PRIVATE);
-					Editor ed = sPref.edit();
-					ed.putString(CURRENT_SELECT, selectCurrency.getCharCode());
-					ed.commit();
-				}
-			});
+			CurrencyActivity ca = (CurrencyActivity) activity;
+			ca.connectAdapterListner();
 		}
 	}
 
+	public void onClickByItem(Currency t) {
+		setSelectCurrency(t);
+		adapter.notifyDataSetChanged();
+		sPref = activity.getPreferences(activity.MODE_PRIVATE);
+		Editor ed = sPref.edit();
+		ed.putString(CURRENT_SELECT, selectCurrency.getCharCode());
+		ed.commit();
+	}
+
 	public void setupData() {
-		restoreData();
-		setUpLV();
-		setCurrentDate();
-		setCurrentCurrency();
+		if (parserFlag) {
+			restoreData();
+			setUpLV();
+			setCurrentDate();
+			setCurrentCurrency();
+		} else {
+			MyToast.showWarning(activity, R.string.warning);
+		}
 	}
 
 	public void reload(Activity activity) {
@@ -302,6 +306,8 @@ public class CurrencyModel {
 				CProgressBar.finish();
 				CProgressBar.onCreateDialog(1, activity);
 				CProgressBar.setProgress();
+			} else {
+				setupData();
 			}
 		} else {
 			setupData();
@@ -393,6 +399,7 @@ public class CurrencyModel {
 		ed.putFloat(CURRENT_VALUE, currentValue.floatValue());
 		ed.putInt(CURRENT_ALARAM, alaram);
 		ed.putInt(CURRENT_UPDATEPERIOD, updatePeriod);
+		ed.putString(CURRENT_ID, currentID);
 		ed.commit();
 	}
 

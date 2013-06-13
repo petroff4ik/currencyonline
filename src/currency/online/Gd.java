@@ -5,7 +5,6 @@
 package currency.online;
 
 import android.content.Context;
-import java.util.Locale;
 import junit.framework.Assert;
 
 /**

@@ -1,8 +1,10 @@
 /home/petroff/android_project/currencyonline/bin/currencyonline.ap_ \
  : /home/petroff/android_project/currencyonline/res/layout/currencylist.xml \
+/home/petroff/android_project/currencyonline/res/layout/window_title.xml \
 /home/petroff/android_project/currencyonline/res/layout/spinner.xml \
 /home/petroff/android_project/currencyonline/res/layout/calc.xml \
 /home/petroff/android_project/currencyonline/res/layout/main.xml \
+/home/petroff/android_project/currencyonline/res/values/custom_style.xml \
 /home/petroff/android_project/currencyonline/res/values/strings.xml \
 /home/petroff/android_project/currencyonline/res/values/styles.xml \
 /home/petroff/android_project/currencyonline/res/color/color.xml \
@@ -190,6 +192,7 @@
 /home/petroff/android_project/currencyonline/res/drawable/fo.png \
 /home/petroff/android_project/currencyonline/res/drawable/la.png \
 /home/petroff/android_project/currencyonline/res/drawable/mz.png \
+/home/petroff/android_project/currencyonline/res/drawable/graph16.png \
 /home/petroff/android_project/currencyonline/res/drawable/ug.png \
 /home/petroff/android_project/currencyonline/res/drawable/tg.png \
 /home/petroff/android_project/currencyonline/res/drawable/za.png \
@@ -213,6 +216,7 @@
 /home/petroff/android_project/currencyonline/res/drawable/as.png \
 /home/petroff/android_project/currencyonline/res/drawable/hn.png \
 /home/petroff/android_project/currencyonline/res/drawable/eu.png \
+/home/petroff/android_project/currencyonline/res/drawable/graph.png \
 /home/petroff/android_project/currencyonline/res/drawable/td.png \
 /home/petroff/android_project/currencyonline/res/drawable/fm.png \
 /home/petroff/android_project/currencyonline/res/drawable/gn.png \
@@ -435,6 +439,7 @@
 /home/petroff/android_project/currencyonline/bin/res/drawable/fo.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/la.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/mz.png \
+/home/petroff/android_project/currencyonline/bin/res/drawable/graph16.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/ug.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/tg.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/za.png \
@@ -458,6 +463,7 @@
 /home/petroff/android_project/currencyonline/bin/res/drawable/as.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/hn.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/eu.png \
+/home/petroff/android_project/currencyonline/bin/res/drawable/graph.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/td.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/fm.png \
 /home/petroff/android_project/currencyonline/bin/res/drawable/gn.png \

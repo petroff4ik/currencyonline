@@ -12,18 +12,16 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.StringReader;
-import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Date;
 import java.text.ParseException;
 
-public class XmlParser {
-	
-	static String currentDt = new java.util.Date().toString ();
+public final class XmlParser {
+
+	static String currentDt = new java.util.Date().toString();
 
 	public static List<Currency> parserXml(String xml) {
 		List<Currency> list = new ArrayList<Currency>();
@@ -50,7 +48,7 @@ public class XmlParser {
 						} catch (ParseException p) {
 						}
 						currency.setValue(d);
-					} else if(currentTag.equals("Nominal")){
+					} else if (currentTag.equals("Nominal")) {
 						NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 						int i = 0;
 						try {
@@ -67,8 +65,10 @@ public class XmlParser {
 					currency.setDate(date);
 					list.add(currency);
 					currency = new Currency();
-				}else if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("ValCurs")) {
+				} else if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("ValCurs")) {
 					currentDt = parser.getAttributeValue(0);
+				} else if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("Valute")) {
+					currency.setId(parser.getAttributeValue(0));
 				}
 
 				parser.next();
@@ -82,8 +82,8 @@ public class XmlParser {
 		return list;
 
 	}
-	
-	public static String getCDT(){
+
+	public static String getCDT() {
 		return currentDt;
 	}
 
@@ -94,6 +94,4 @@ public class XmlParser {
 		xpp.setInput(new StringReader(xml));
 		return xpp;
 	}
-	
-	
 }

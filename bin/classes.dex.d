@@ -9,13 +9,14 @@
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Currency$1.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Http.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyModel.class \
+/home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyActivity$2.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyActivity.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyAdapter.class \
+/home/petroff/android_project/currencyonline/bin/classes/currency/online/MyToast.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/XmlParser.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyCalculator.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$attr.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyService$1.class \
-/home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyModel$1.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/Gd.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$color.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/TaskPreperDate.class \
