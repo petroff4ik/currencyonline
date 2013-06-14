@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class CurrencyService extends Service {
-
+	int startId;
 	final String LOG_TAG = "myLogs";
 
 	public void onCreate() {
@@ -26,6 +26,7 @@ public class CurrencyService extends Service {
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(LOG_TAG, "onStartCommand" + startId);
+		this.startId = startId;
 		someTask();
 		return START_STICKY;
 	}
@@ -47,9 +48,9 @@ public class CurrencyService extends Service {
 
 			@Override
 			public void run() {
-				Log.d(LOG_TAG, "Timer");
+				Log.d(LOG_TAG, "Timer" + startId);
 			}
-		 ;}, 0L, 60L * 10); // interval
+		 ;}, 0L, 60L * 100); // interval
 
 	}
 }

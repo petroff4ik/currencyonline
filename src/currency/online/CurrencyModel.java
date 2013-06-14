@@ -275,6 +275,7 @@ public class CurrencyModel {
 			lvMain.setAdapter(adapter);
 			CurrencyActivity ca = (CurrencyActivity) activity;
 			ca.connectAdapterListner();
+			ca.startService();
 		}
 	}
 

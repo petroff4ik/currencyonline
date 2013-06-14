@@ -23,7 +23,6 @@ public class CurrencyActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
-		//startService(new Intent(this, CurrencyService.class));
 		model = (CurrencyModel) getLastNonConfigurationInstance();
 		if (model == null) {
 			model = new CurrencyModel(this);
@@ -31,8 +30,6 @@ public class CurrencyActivity extends Activity {
 		} else {
 			model.reload(this);
 		}
-
-
 	}
 
 	public void connectAdapterListner() {
@@ -96,5 +93,13 @@ public class CurrencyActivity extends Activity {
 		});
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	public void startService() {
+		MyParcelable mp = new MyParcelable(model.currency, model.getCurrentCurrency());
+		Intent intent = new Intent(this, CurrencyService.class);
+		intent.putExtra(MyParcelable.class.getCanonicalName(), mp);
+		intent.putExtra("selectCurrency", model.getSelectCurrency());
+		startService(intent);
 	}
 }
