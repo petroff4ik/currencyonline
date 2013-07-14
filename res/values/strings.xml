@@ -13,4 +13,5 @@
     <string name="def">0</string>
     <string name="reload">Reload</string>
 	<string name="warning">Can\'t connect</string>
+	<string name="title_notification">Rbc</string>
 </resources>

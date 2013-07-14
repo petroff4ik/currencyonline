@@ -1,8 +1,11 @@
 package currency.online;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +26,7 @@ public class CurrencyActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+		stopService(new Intent(this, CurrencyService.class));
 		model = (CurrencyModel) getLastNonConfigurationInstance();
 		if (model == null) {
 			model = new CurrencyModel(this);
@@ -98,8 +102,12 @@ public class CurrencyActivity extends Activity {
 	public void startService() {
 		MyParcelable mp = new MyParcelable(model.currency, model.getCurrentCurrency());
 		Intent intent = new Intent(this, CurrencyService.class);
-		intent.putExtra(MyParcelable.class.getCanonicalName(), mp);
-		intent.putExtra("selectCurrency", model.getSelectCurrency());
 		startService(intent);
 	}
+	
+	@Override
+    public void onStop() {
+        super.onStop();
+        startService();
+    }
 }
