@@ -36,7 +36,7 @@ public class CurrencyService extends Service {
 		model.restoreUpdateTime();
 		int period = model.getUpdatePeriodMin();
 		if (period > 0) {
-				someTask((long) (period * 60 * 1000));
+			someTask((long) (period * 60 * 1000));
 		} else {
 			stopSelf();
 		}
@@ -59,8 +59,13 @@ public class CurrencyService extends Service {
 
 			@Override
 			public void run() {
-				model.serviceLoadAndPrepeData();
-				initNotif();
+				if (model.serviceLoadAndPrepeData()) {
+					initNotif();
+				} else {
+					cancel();
+					stopSelf();
+					initNotif();
+				}
 			}
 		}, period, period); // interval
 	}
