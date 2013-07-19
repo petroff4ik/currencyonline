@@ -14,7 +14,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,30 +27,28 @@ public class CurrencyService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Log.d(LOG_TAG, "onCreate");
 	}
 
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d(LOG_TAG, "onStartCommand" + startId);
 		this.startId = startId;
+
 		model = new CurrencyModel(this.getApplicationContext());
 		model.restoreUpdateTime();
 		int period = model.getUpdatePeriodMin();
 		if (period > 0) {
-			someTask((long) (period * 60 * 1000));
+				someTask((long) (period * 60 * 1000));
 		} else {
 			stopSelf();
 		}
 		return START_STICKY;
+
 	}
 
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d(LOG_TAG, "onDestroy");
 	}
 
 	public IBinder onBind(Intent intent) {
-		Log.d(LOG_TAG, "onBind");
 		return null;
 	}
 
@@ -62,20 +59,14 @@ public class CurrencyService extends Service {
 
 			@Override
 			public void run() {
-				if (model.serviceLoadAndPrepeData()) {
-					if (model.checkAlaramValue()) {
-						sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), true);
-					} else {
-						sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), false);
-					}
-				} else {
-					//todo haven't data
-					model.setNotHaveData();
-					sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), true);
-				}
+				model.serviceLoadAndPrepeData();
+				initNotif();
 			}
-		 ;
 		}, period, period); // interval
+	}
+
+	private void initNotif() {
+		sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), model.getLightsFlag());
 	}
 
 	private void sendNotif(String textSystemBar, String textEventInfo, int r_id, Boolean m) {

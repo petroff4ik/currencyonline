@@ -105,15 +105,9 @@ public class CurrencyActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public void startService() {
-		MyParcelable mp = new MyParcelable(model.currency, model.getCurrentCurrency());
-		Intent intent = new Intent(this, CurrencyService.class);
-		startService(intent);
-	}
-
 	@Override
 	public void onStop() {
 		super.onStop();
-		startService();
+		startService(new Intent(this, CurrencyService.class));
 	}
 }

@@ -63,6 +63,7 @@ public class CurrencyModel {
 	private String currentID = "R00000";
 	private Currency selectCurrency;
 	private Boolean parserFlag;
+	private Boolean lightsFlag = false;
 	final String CURRENT_CURRENCY = "current_currency";
 	final String CURRENT_NOMINAL = "current_nominal";
 	final String CURRENT_VALUE = "current_value";
@@ -91,6 +92,10 @@ public class CurrencyModel {
 		UPL.add(new SpinnerUpdateAdapterElement(60, "1 hour"));
 		UPL.add(new SpinnerUpdateAdapterElement(720, "12 hour"));
 		UPL.add(new SpinnerUpdateAdapterElement(1420, "once a day"));
+	}
+
+	public Boolean getLightsFlag() {
+		return lightsFlag;
 	}
 
 	public Integer getImg_id() {
@@ -231,9 +236,13 @@ public class CurrencyModel {
 		this.currentNominal = currentNominal;
 	}
 
-	public Boolean threadPreDate() {
+	public Boolean threadPreDate(Boolean readFromFile) {
 		FileOperation fo = new FileOperation(context);
 		if (!Http.hasConnection(context)) {
+			if(readFromFile == false){
+				parserFlag = false;
+				return false;
+			}
 			String data = fo.readFile();
 			if (data == null || data.length() == 0) {
 				parserFlag = false;
@@ -274,6 +283,8 @@ public class CurrencyModel {
 		selectCurrency = rub;
 		return true;
 	}
+	
+	
 
 	public void restoreData() {
 		sPref = context.getSharedPreferences(NAME_PREF, context.MODE_PRIVATE);
@@ -475,29 +486,35 @@ public class CurrencyModel {
 	}
 
 	public boolean serviceLoadAndPrepeData() {
-		if (threadPreDate()) {
+		Log.v("SERVICE", "dernuli");
+		if (threadPreDate(false)) {
 			restoreData();
-			int pos = listFindByArray(currency_old, selectCurrency.getCharCode());
-			Currency c_old = currency_old.get(pos);
-			Double t_now = ((selectCurrency.getValue() / getCurrentValue()) * getCurrentNominal());
-			Double t_old = ((c_old.getValue() / getCurrentValue()) * getCurrentNominal());
-			Double diff = t_now - t_old;
-			diff = new BigDecimal(diff).setScale(3, RoundingMode.UP).doubleValue();
-			if (selectCurrency.getValue() > c_old.getValue()) {
-				img_id = Gd.getDrawable("up", context);
-				textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
-				textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
-			} else if (selectCurrency.getValue() < c_old.getValue()) {
-				img_id = Gd.getDrawable("down", context);
-				textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
-				textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+			if (checkAlaramValue()) {
+				return true;
 			} else {
-				img_id = Gd.getDrawable("exactly", context);
-				textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
-				textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+				int pos = listFindByArray(currency_old, selectCurrency.getCharCode());
+				Currency c_old = currency_old.get(pos);
+				Double t_now = ((selectCurrency.getValue() / getCurrentValue()) * getCurrentNominal());
+				Double t_old = ((c_old.getValue() / getCurrentValue()) * getCurrentNominal());
+				Double diff = t_now - t_old;
+				diff = new BigDecimal(diff).setScale(3, RoundingMode.UP).doubleValue();
+				if (selectCurrency.getValue() > c_old.getValue()) {
+					img_id = Gd.getDrawable("up", context);
+					textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
+					textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+				} else if (selectCurrency.getValue() < c_old.getValue()) {
+					img_id = Gd.getDrawable("down", context);
+					textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
+					textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+				} else {
+					img_id = Gd.getDrawable("exactly", context);
+					textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
+					textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+				}
+				return true;
 			}
-			return true;
 		} else {
+			setMessageNotConnect();
 			return false;
 		}
 	}
@@ -509,21 +526,22 @@ public class CurrencyModel {
 			img_id = Gd.getDrawable("graph16", context);
 			textSystemBar = selectCurrency.getCharCode() + " = " + alaram;
 			textEventInfo = selectCurrency.getCharCode() + " = " + alaram;
+			lightsFlag = true;
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public void setNotHaveData() {
+	public void setMessageNotConnect() {
 		img_id = Gd.getDrawable("graph16", context);
 		textSystemBar = context.getText(R.string.ndata).toString();
 		textEventInfo = context.getText(R.string.ndata).toString();
+		lightsFlag = true;
 	}
-	
+
 	public int getUpdatePeriodMin() {
 		SpinnerUpdateAdapterElement el = UPL.get(updatePeriod);
 		return el.getValue();
 	}
-
 }

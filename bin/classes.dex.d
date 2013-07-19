@@ -1,4 +1,5 @@
 /home/petroff/android_project/currencyonline/bin/classes.dex : \
+/home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyConnectReceiver.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/CurrencyAdapter$Grafic.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/R$style.class \
 /home/petroff/android_project/currencyonline/bin/classes/currency/online/FileOperation.class \

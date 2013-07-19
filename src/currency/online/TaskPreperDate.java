@@ -28,7 +28,7 @@ public class TaskPreperDate extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		model.threadPreDate();
+		model.threadPreDate(true);
 		return null;
 	}
 
