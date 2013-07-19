@@ -14,4 +14,5 @@
     <string name="reload">Reload</string>
 	<string name="warning">Can\'t connect</string>
 	<string name="title_notification">Rbc</string>
+	<string name="ndata">Haven\'t connect</string>
 </resources>

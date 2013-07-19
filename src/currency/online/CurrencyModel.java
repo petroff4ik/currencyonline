@@ -16,8 +16,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 import java.util.Calendar;
 import java.math.BigDecimal;
@@ -78,15 +76,33 @@ public class CurrencyModel {
 	final static String NAME_PREF = "currency_pref";
 	static final List<SpinnerUpdateAdapterElement> UPL = new ArrayList<SpinnerUpdateAdapterElement>();
 	private int updatePeriod;
-	private int alaram;
+	private Float alaram;
+	private String textSystemBar;
+	private String textEventInfo;
+	private Integer img_id;
 
 	static {
-		UPL.add(new SpinnerUpdateAdapterElement(1420, "once a day"));
+		UPL.add(new SpinnerUpdateAdapterElement(0, "never"));
+		UPL.add(new SpinnerUpdateAdapterElement(1, "1 min"));
+		UPL.add(new SpinnerUpdateAdapterElement(5, "5 min"));
 		UPL.add(new SpinnerUpdateAdapterElement(10, "10 min"));
 		UPL.add(new SpinnerUpdateAdapterElement(20, "20 min"));
 		UPL.add(new SpinnerUpdateAdapterElement(30, "30 min"));
 		UPL.add(new SpinnerUpdateAdapterElement(60, "1 hour"));
 		UPL.add(new SpinnerUpdateAdapterElement(720, "12 hour"));
+		UPL.add(new SpinnerUpdateAdapterElement(1420, "once a day"));
+	}
+
+	public Integer getImg_id() {
+		return img_id;
+	}
+
+	public String getTextEventInfo() {
+		return textEventInfo;
+	}
+
+	public String getTextSystemBar() {
+		return textSystemBar;
 	}
 
 	public Currency getSelectCurrency() {
@@ -97,11 +113,11 @@ public class CurrencyModel {
 		this.selectCurrency = selectCurrency;
 	}
 
-	public int getAlaram() {
+	public Float getAlaram() {
 		return alaram;
 	}
 
-	public void setAlaram(int alaram) {
+	public void setAlaram(Float alaram) {
 		this.alaram = alaram;
 	}
 
@@ -216,7 +232,6 @@ public class CurrencyModel {
 	}
 
 	public Boolean threadPreDate() {
-		Log.v("PARSER","->1");
 		FileOperation fo = new FileOperation(context);
 		if (!Http.hasConnection(context)) {
 			String data = fo.readFile();
@@ -241,8 +256,9 @@ public class CurrencyModel {
 			fo.writeFile(data);
 			CurrentDate = XmlParser.getCDT();
 			// create old list
-			url = url + "date_req=" + getPrevData(CurrentDate);
-			data = Http.connect(url);
+			String urlWithDat = "";
+			urlWithDat = url + "date_req=" + getPrevData(CurrentDate);
+			data = Http.connect(urlWithDat);
 			currency_old = XmlParser.parserXml(data);
 			fo.setFileName("data_old");
 			fo.writeFile(data);
@@ -268,14 +284,21 @@ public class CurrencyModel {
 					currentNominal);
 			Float t = sPref.getFloat(this.CURRENT_VALUE, 1);
 			this.currentValue = t.doubleValue();
-			this.updatePeriod = sPref.getInt(CURRENT_UPDATEPERIOD, 0);
-			this.alaram = sPref.getInt(CURRENT_ALARAM, 0);
+			restoreUpdateTime();
+			this.alaram = sPref.getFloat(CURRENT_ALARAM, 0);
 			this.currentID = sPref.getString(this.CURRENT_ID, "R00000");
 			String tempCharCurrency = sPref.getString(this.CURRENT_SELECT,
 					"RUB");
 			int pos = listFindByArray(currency, tempCharCurrency);
 			selectCurrency = currency.get(pos);
 		}
+	}
+
+	public void restoreUpdateTime() {
+		if (sPref == null) {
+			sPref = context.getSharedPreferences(NAME_PREF, context.MODE_PRIVATE);
+		}
+		this.updatePeriod = sPref.getInt(CURRENT_UPDATEPERIOD, 0);
 	}
 
 	public void preloadData() {
@@ -299,14 +322,11 @@ public class CurrencyModel {
 		}
 	}
 
-	private boolean isMyServiceRunning() {
+	public boolean isMyServiceRunning() {
 		CurrencyActivity ca = (CurrencyActivity) activity;
-		ActivityManager manager = (ActivityManager) ca
-				.getSystemService(ca.ACTIVITY_SERVICE);
-		for (RunningServiceInfo service : manager
-				.getRunningServices(Integer.MAX_VALUE)) {
-			if ("currency.online.CurrencyService".equals(service.service
-					.getClassName())) {
+		ActivityManager manager = (ActivityManager) ca.getSystemService(ca.ACTIVITY_SERVICE);
+		for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+			if ("currency.online.CurrencyService".equals(service.service.getClassName())) {
 				return true;
 			}
 		}
@@ -425,7 +445,7 @@ public class CurrencyModel {
 		this.currentCurrency = data.getStringExtra("selectCurrency");
 		this.currentNominal = data.getIntExtra("nominal", 1);
 		this.currentValue = data.getDoubleExtra("value", 1.0);
-		this.alaram = data.getIntExtra(CURRENT_ALARAM, 0);
+		this.alaram = data.getFloatExtra(CURRENT_ALARAM, 0);
 		this.updatePeriod = data.getIntExtra(CURRENT_UPDATEPERIOD, 1420);
 		setCurrentCurrency();
 		adapter.notifyDataSetChanged();
@@ -434,7 +454,7 @@ public class CurrencyModel {
 		ed.putString(CURRENT_CURRENCY, currentCurrency);
 		ed.putInt(CURRENT_NOMINAL, currentNominal);
 		ed.putFloat(CURRENT_VALUE, currentValue.floatValue());
-		ed.putInt(CURRENT_ALARAM, alaram);
+		ed.putFloat(CURRENT_ALARAM, alaram);
 		ed.putInt(CURRENT_UPDATEPERIOD, updatePeriod);
 		ed.putString(CURRENT_ID, currentID);
 		ed.commit();
@@ -444,7 +464,7 @@ public class CurrencyModel {
 		spinner4 = (Spinner) a.findViewById(R.id.spinner4);
 		editText2 = (EditText) a.findViewById(R.id.editText2);
 		SharedPreferences sPref = a.getSharedPreferences(NAME_PREF, a.MODE_PRIVATE);
-		Integer alaram = sPref.getInt(CURRENT_ALARAM, 0);
+		Float alaram = sPref.getFloat(CURRENT_ALARAM, 0);
 		Integer posObjectUpdatePeriod = sPref.getInt(CURRENT_UPDATEPERIOD, 0);
 		editText2.setText(alaram.toString());
 		SpinnerUpdateAdapter adapter = new SpinnerUpdateAdapter(a,
@@ -453,13 +473,57 @@ public class CurrencyModel {
 		spinner4.setAdapter(adapter);
 		spinner4.setSelection(posObjectUpdatePeriod);
 	}
-	
-	public void serviceLoadAndPrepeData(){
-		if(threadPreDate()){
+
+	public boolean serviceLoadAndPrepeData() {
+		if (threadPreDate()) {
 			restoreData();
-			Log.v("SERVICE", "GOOD " + getAlaram());
-		}else{
-			
+			int pos = listFindByArray(currency_old, selectCurrency.getCharCode());
+			Currency c_old = currency_old.get(pos);
+			Double t_now = ((selectCurrency.getValue() / getCurrentValue()) * getCurrentNominal());
+			Double t_old = ((c_old.getValue() / getCurrentValue()) * getCurrentNominal());
+			Double diff = t_now - t_old;
+			diff = new BigDecimal(diff).setScale(3, RoundingMode.UP).doubleValue();
+			if (selectCurrency.getValue() > c_old.getValue()) {
+				img_id = Gd.getDrawable("up", context);
+				textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
+				textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+			} else if (selectCurrency.getValue() < c_old.getValue()) {
+				img_id = Gd.getDrawable("down", context);
+				textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
+				textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+			} else {
+				img_id = Gd.getDrawable("exactly", context);
+				textSystemBar = selectCurrency.getCharCode() + ": " + diff.toString();
+				textEventInfo = selectCurrency.getCharCode() + ": " + diff.toString() + "(" + currentCurrency + ")";
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
+
+	public boolean checkAlaramValue() {
+		Double convert = ((selectCurrency.getValue() / getCurrentValue()) * getCurrentNominal());
+		convert = new BigDecimal(convert).setScale(3, RoundingMode.UP).doubleValue();
+		if (alaram != null && alaram != 0 && alaram >= convert) {
+			img_id = Gd.getDrawable("graph16", context);
+			textSystemBar = selectCurrency.getCharCode() + " = " + alaram;
+			textEventInfo = selectCurrency.getCharCode() + " = " + alaram;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void setNotHaveData() {
+		img_id = Gd.getDrawable("graph16", context);
+		textSystemBar = context.getText(R.string.ndata).toString();
+		textEventInfo = context.getText(R.string.ndata).toString();
+	}
+	
+	public int getUpdatePeriodMin() {
+		SpinnerUpdateAdapterElement el = UPL.get(updatePeriod);
+		return el.getValue();
+	}
+
 }

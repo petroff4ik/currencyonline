@@ -19,9 +19,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class CurrencyService extends Service {
+
 	int startId;
 	final String LOG_TAG = "myLogs";
 	NotificationManager nm;
+	CurrencyModel model;
 
 	public void onCreate() {
 		super.onCreate();
@@ -32,9 +34,14 @@ public class CurrencyService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(LOG_TAG, "onStartCommand" + startId);
 		this.startId = startId;
-		CurrencyModel model = new CurrencyModel(this.getApplicationContext());
-		model.serviceLoadAndPrepeData();
-		someTask();
+		model = new CurrencyModel(this.getApplicationContext());
+		model.restoreUpdateTime();
+		int period = model.getUpdatePeriodMin();
+		if (period > 0) {
+			someTask((long) (period * 60 * 1000));
+		} else {
+			stopSelf();
+		}
 		return START_STICKY;
 	}
 
@@ -48,28 +55,50 @@ public class CurrencyService extends Service {
 		return null;
 	}
 
-	private void someTask() {
+	private void someTask(Long period) {
 		Timer myTimer = new Timer();
 
 		myTimer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
-				Log.d(LOG_TAG, "Timer" + startId);
-			};
-		}, 0L, 60L * 100); // interval
-
+				if (model.serviceLoadAndPrepeData()) {
+					if (model.checkAlaramValue()) {
+						sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), true);
+					} else {
+						sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), false);
+					}
+				} else {
+					//todo haven't data
+					model.setNotHaveData();
+					sendNotif(model.getTextSystemBar(), model.getTextEventInfo(), model.getImg_id(), true);
+				}
+			}
+		 ;
+		}, period, period); // interval
 	}
 
-	private void sendNotif(String textSystemBar, String textEventInfo) {
+	private void sendNotif(String textSystemBar, String textEventInfo, int r_id, Boolean m) {
 
-		Notification notif = new Notification(R.drawable.graph16,
+		Notification notif = new Notification(r_id,
 				textSystemBar, System.currentTimeMillis());
+		notif.defaults = Notification.DEFAULT_LIGHTS;
 		Intent intent = new Intent(this, CurrencyActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		CharSequence titleForEvent = this.getText(R.string.title_notification);
 		notif.setLatestEventInfo(this, titleForEvent, textEventInfo, pIntent);
 		notif.flags |= Notification.FLAG_AUTO_CANCEL;
+		notif.defaults |= Notification.DEFAULT_SOUND;
+		notif.defaults |= Notification.DEFAULT_LIGHTS;
+		notif.defaults |= Notification.DEFAULT_VIBRATE;
+
+		if (m) {
+			notif.flags |= Notification.FLAG_SHOW_LIGHTS;
+			notif.ledARGB = 0xff00ff00;
+			notif.ledOnMS = 300;
+			notif.ledOffMS = 1000;
+		}
+
 		nm.notify(1, notif);
 	}
 }

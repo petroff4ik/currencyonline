@@ -26,6 +26,7 @@ public class CurrencyCalculator extends Activity implements
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.calc);
+		stopService(new Intent(this, CurrencyService.class));
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.window_title);
 		MyParcelable myObj = (MyParcelable) getIntent().getParcelableExtra(
@@ -48,8 +49,12 @@ public class CurrencyCalculator extends Activity implements
 		intent.putExtra("nominal", nominal);
 		intent.putExtra(CurrencyModel.CURRENT_UPDATEPERIOD,
 				spinnerUpdatePeriodPos);
+		String temp = CurrencyModel.editText2.getText().toString();
+		if ("".equals(temp)) {
+			temp = "0.0";
+		}
 		intent.putExtra(CurrencyModel.CURRENT_ALARAM,
-				Integer.parseInt(CurrencyModel.editText2.getText().toString()));
+				Float.parseFloat(temp));
 		setResult(RESULT_OK, intent);
 		finish();
 
@@ -58,8 +63,7 @@ public class CurrencyCalculator extends Activity implements
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,
 			long id) {
 		if (parent.getId() == R.id.spinner4) {
-			SpinnerUpdateAdapterElement t1 = (SpinnerUpdateAdapterElement) parent
-					.getItemAtPosition(pos);
+			SpinnerUpdateAdapterElement t1 = (SpinnerUpdateAdapterElement) parent.getItemAtPosition(pos);
 			updatePeriod = t1.getValue();
 			spinnerUpdatePeriodPos = pos;
 		} else {
@@ -93,8 +97,7 @@ public class CurrencyCalculator extends Activity implements
 	}
 
 	public void calc() {
-		String result = CurrencyModel.currencyExchange(CurrencyModel.edit
-				.getText().toString());
+		String result = CurrencyModel.currencyExchange(CurrencyModel.edit.getText().toString());
 		TextView text = (TextView) this.findViewById(R.id.res);
 		text.setText(result);
 	}
