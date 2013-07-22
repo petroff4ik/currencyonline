@@ -23,6 +23,7 @@ public class CurrencyService extends Service {
 	final String LOG_TAG = "myLogs";
 	NotificationManager nm;
 	CurrencyModel model;
+	Timer myTimer;
 
 	public void onCreate() {
 		super.onCreate();
@@ -44,8 +45,13 @@ public class CurrencyService extends Service {
 
 	}
 
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if (myTimer != null) {
+			myTimer.cancel();
+			myTimer.purge();
+		}
 	}
 
 	public IBinder onBind(Intent intent) {
@@ -53,8 +59,8 @@ public class CurrencyService extends Service {
 	}
 
 	private void someTask(Long period) {
-		Timer myTimer = new Timer();
-
+		myTimer = new Timer();
+		myTimer.purge();
 		myTimer.schedule(new TimerTask() {
 
 			@Override
@@ -67,7 +73,7 @@ public class CurrencyService extends Service {
 					initNotif();
 				}
 			}
-		}, period, period); // interval
+		}, 0, period); // interval
 	}
 
 	private void initNotif() {
