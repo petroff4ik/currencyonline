@@ -16,7 +16,6 @@ import java.io.OutputStreamWriter;
 
 
 import android.os.Environment;
-import android.util.Log;
 import android.content.Context;
 
 /**
@@ -48,7 +47,6 @@ public class FileOperation {
 			bw.write(data);
 			// закрываем поток
 			bw.close();
-			Log.d(LOG_TAG, "Файл записан");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -78,7 +76,6 @@ public class FileOperation {
 		// проверяем доступность SD
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			Log.d(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
 			return;
 		}
 		// получаем путь к SD
@@ -96,7 +93,6 @@ public class FileOperation {
 			bw.write(data);
 			// закрываем поток
 			bw.close();
-			Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +102,6 @@ public class FileOperation {
 		// проверяем доступность SD
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			Log.d(LOG_TAG, "SD-карта не доступна: " + Environment.getExternalStorageState());
 			return;
 		}
 		// получаем путь к SD
@@ -121,7 +116,6 @@ public class FileOperation {
 			String str = "";
 			// читаем содержимое
 			while ((str = br.readLine()) != null) {
-				Log.d(LOG_TAG, str);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

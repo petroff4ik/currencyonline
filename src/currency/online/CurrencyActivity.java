@@ -24,12 +24,6 @@ public class CurrencyActivity extends Activity {
 		setContentView(R.layout.main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		stopService(new Intent(this, CurrencyService.class));
-
-//		model = new CurrencyModel(this);
-//		model.serviceLoadAndPrepeData();
-
-
-
 		model = (CurrencyModel) getLastNonConfigurationInstance();
 		if (model == null) {
 			model = new CurrencyModel(this);

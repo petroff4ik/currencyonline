@@ -7,7 +7,6 @@ package currency.online;
 import android.app.ProgressDialog;
 import android.app.Dialog;
 import android.app.Activity;
-import android.util.Log;
 
 /**
  *
@@ -72,7 +71,6 @@ public final class CProgressBar {
 			mProgressDialog.cancel();
 			mProgressDialog.dismiss();
 		} catch (Exception e) {
-			Log.v("test", "t " + e);
 			/* cannot happen */
 		}
 	}

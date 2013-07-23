@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import android.widget.TextView;
 import java.util.Calendar;
 import java.math.BigDecimal;
@@ -486,7 +485,6 @@ public class CurrencyModel {
 	}
 
 	public boolean serviceLoadAndPrepeData() {
-		Log.v("SERVICE", "dernuli");
 		if (threadPreDate(false)) {
 			restoreData();
 			if (checkAlaramValue()) {
