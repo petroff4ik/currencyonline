@@ -17,6 +17,7 @@
 			</intent-filter>
 		</receiver>
 		<activity
+			android:launchMode="singleTop"
             android:name="CurrencyActivity"
             android:label="@string/app_name" >
 			<intent-filter>
@@ -29,6 +30,7 @@
 		<service android:name=".CurrencyService" />
 
 		<activity
+			android:launchMode="singleTop"
             android:name="CurrencyCalculator"
             android:label="@string/app_name" >
 		</activity>

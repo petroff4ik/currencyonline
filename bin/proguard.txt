@@ -1,13 +1,13 @@
 # view AndroidManifest.xml #generated:19
 -keep class currency.online.CurrencyActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:31
+# view AndroidManifest.xml #generated:32
 -keep class currency.online.CurrencyCalculator { <init>(...); }
 
 # view AndroidManifest.xml #generated:12
 -keep class currency.online.CurrencyConnectReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:29
+# view AndroidManifest.xml #generated:30
 -keep class currency.online.CurrencyService { <init>(...); }
 
 # onClick res/layout/main.xml #generated:18
