@@ -50,10 +50,12 @@ public class CurrencyActivity extends Activity {
 	}
 
 	public void screenCalculate(View v) {
+		if(model.currency != null){
 		MyParcelable mp = new MyParcelable(model.currency, model.getCurrentCurrency());
 		Intent intent = new Intent(this, CurrencyCalculator.class);
 		intent.putExtra(MyParcelable.class.getCanonicalName(), mp);
 		startActivityForResult(intent, REQUEST_CODE_CALC);
+		}
 	}
 
 	@Override
