@@ -88,6 +88,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 		protected ImageView imageview;
 		protected ImageView imageviewdiff;
 		protected TextView value_diff;
+		protected TextView nominal;
 		protected LinearLayout ll;
 	}
 
@@ -123,6 +124,7 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 			holder.text = (TextView) view.findViewById(R.id.label);
 			holder.desc = (TextView) view.findViewById(R.id.desc);
 			holder.value = (TextView) view.findViewById(R.id.value);
+			holder.nominal = (TextView) view.findViewById(R.id.nominal);
 			holder.imageview = (ImageView) view.findViewById(R.id.icon);
 			holder.imageviewdiff = (ImageView) view.findViewById(R.id.icon_diff);
 			holder.value_diff = (TextView) view.findViewById(R.id.value_diff);
@@ -154,6 +156,12 @@ public class CurrencyAdapter extends ArrayAdapter<Currency> {
 			holder.imageview.setImageResource(i);
 		} else {
 			holder.imageview.setImageResource(R.drawable.none);
+		}
+		
+		if(list.get(position).getNominal() > 1){
+			holder.nominal.setText("x" + list.get(position).getNominal());
+		}else{
+			holder.nominal.setText("");
 		}
 		
 		if(model.getSelectCurrency() != null && model.getSelectCurrency().getCharCode().equals(list.get(position).getCharCode())){
