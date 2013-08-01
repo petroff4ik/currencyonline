@@ -1,5 +1,6 @@
 /home/petroff/android_project/currencyonline/bin/currencyonline.ap_ \
- : /home/petroff/android_project/currencyonline/res/layout/currencylist.xml \
+ : /home/petroff/android_project/currencyonline/res/layout-land/calc.xml \
+/home/petroff/android_project/currencyonline/res/layout/currencylist.xml \
 /home/petroff/android_project/currencyonline/res/layout/window_title.xml \
 /home/petroff/android_project/currencyonline/res/layout/spinner.xml \
 /home/petroff/android_project/currencyonline/res/layout/calc.xml \

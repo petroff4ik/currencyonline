@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import android.widget.TextView;
 import java.util.Calendar;
 import java.math.BigDecimal;
@@ -256,7 +257,7 @@ public class CurrencyModel {
 		} else {
 			// create current list
 			String data = Http.connect(url);
-			if (data == null) {
+			if (data == null || data.equals("")) {
 				parserFlag = false;
 				return false;
 			}
